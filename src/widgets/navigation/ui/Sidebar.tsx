@@ -1,7 +1,7 @@
 import { Link, useLocation } from "@/shared/routing";
 import {
   Home, Image, Video, MessageSquare, Mic, Bot, LayoutGrid, Layers,
-  CreditCard, History, ChevronLeft, ChevronDown, X, ArrowRight, Gem, Plus, Gift, Copy,
+  CreditCard, History, ChevronLeft, ChevronDown, X, ArrowRight, Gem, Plus, Gift, Copy, ListOrdered,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useCopyToast } from "@/features/copy-toast";
@@ -57,6 +57,7 @@ const toolItems: Array<{ icon: React.ElementType; label: string; path: string; b
 const bottomItems = [
   { icon: CreditCard, label: "Тарифы", path: "/pricing" },
   { icon: History, label: "История", path: "/history" },
+  { icon: ListOrdered, label: "Очередь", path: "/queue" },
 ];
 
 export function Sidebar({ open, collapsed, onClose, onToggleCollapse }: SidebarProps) {
