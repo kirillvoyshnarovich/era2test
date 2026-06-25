@@ -13,8 +13,6 @@ npm run dev
 
 ## Роутинг до `/queue` (ТЗ §4.8)
 
-Используется **собственный лёгкий SPA-роутер** (`shared/routing`), не `react-router`.
-
 - Таблица маршрутов: `app/router/index.tsx` → `"/queue": QueuePage`
 - Страница: `pages/QueuePage.tsx` → виджет `widgets/generation-queue`
 - Переходы: `navigate("/queue")` и `<Link to="/queue">` (статус-бар, сайдбар)
@@ -46,3 +44,27 @@ pages/QueuePage            — /queue
 - `MAX_CONCURRENT = 2`, FIFO по `createdAt`
 - Тики прогресса ~400–700 ms, ~15% случайных `failed`
 - Реальных API-запросов нет
+
+## Бонусные функции (ТЗ §6 и §4.8)
+
+### Реализовано
+
+| Бонус | Что сделано |
+|-------|-------------|
+| **Свёрнутый статус-бар** (§4.8) | Режим `collapsed` в `MultipleActiveView` — пилюля «N генераций · X%», разворот по клику |
+| **Плавный прогресс в баре** (§4.8) | `useSmoothedProgress` — задержка и округление среднего %, бар не дёргается на каждом тике |
+| **Доступность (частично)** (§6) | `aria-label` на строках, тулбаре, статистике, кнопках; `aria-busy` при загрузке; `role="alert"` при ошибке; клавиатура `Enter`/`Space` на кликабельной оболочке статус-бара |
+| **Расширенная сортировка** | Помимо новых/старых: по статусу, по прогрессу (↑↓) |
+| **Debounce поиска** | 300 ms в `QueueProvider`, мгновенный ввод в поле |
+| **Подтверждение «Очистить готовые»** | `window.confirm` перед удалением `done`-задач (без Undo) |
+| **Safe-area на mobile** | `viewport-fit=cover` + отступ снизу с учётом `env(safe-area-inset-bottom)` |
+| **Светлая тема (частично)** (§6) | Очередь на токенах дизайн-системы (`--card`, `--foreground` и т.д.) — наследует тему приложения через `ThemeProvider` |
+
+### Не реализовано
+
+- Юнит-тесты reducer / engine  
+- Optimistic UI и Undo  
+- Виртуализация списка  
+- Drag-to-reorder для `queued`  
+- `prefers-reduced-motion`  
+- Анимации на framer-motion  
