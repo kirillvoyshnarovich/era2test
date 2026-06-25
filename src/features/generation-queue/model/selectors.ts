@@ -32,10 +32,41 @@ export function selectAverageActiveProgress(tasks: GenerationTask[]): number {
   return Math.round(sum / active.length);
 }
 
-function byCreatedAt(sort: QueueSort) {
+const STATUS_SORT_ORDER: Record<TaskStatus, number> = {
+  running: 0,
+  queued: 1,
+  failed: 2,
+  canceled: 3,
+  done: 4,
+};
+
+function compareTasks(sort: QueueSort) {
   return (a: GenerationTask, b: GenerationTask): number => {
-    if (sort === "oldest") return a.createdAt - b.createdAt;
-    return b.createdAt - a.createdAt;
+    switch (sort) {
+      case "oldest":
+        return a.createdAt - b.createdAt;
+      case "newest":
+        return b.createdAt - a.createdAt;
+      case "status": {
+        const statusDiff = STATUS_SORT_ORDER[a.status] - STATUS_SORT_ORDER[b.status];
+        if (statusDiff !== 0) return statusDiff;
+        return b.createdAt - a.createdAt;
+      }
+      case "progress-desc": {
+        const progressDiff = b.progress - a.progress;
+        if (progressDiff !== 0) return progressDiff;
+        return b.createdAt - a.createdAt;
+      }
+      case "progress-asc": {
+        const progressDiff = a.progress - b.progress;
+        if (progressDiff !== 0) return progressDiff;
+        return b.createdAt - a.createdAt;
+      }
+      default: {
+        const exhaustiveCheck: never = sort;
+        return exhaustiveCheck;
+      }
+    }
   };
 }
 
@@ -71,7 +102,7 @@ export function selectVisibleTasks(
     .filter((task) => matchesStatus(task, options.status))
     .filter((task) => matchesType(task, options.type))
     .filter((task) => includesSearch(task, options.search))
-    .sort(byCreatedAt(options.sort));
+    .sort(compareTasks(options.sort));
 }
 
 export function selectQueuePosition(tasks: GenerationTask[], taskId: string): number | null {
@@ -84,6 +115,17 @@ export function selectQueuePosition(tasks: GenerationTask[], taskId: string): nu
 
 export function selectTasksByStatus(tasks: GenerationTask[], status: TaskStatus): GenerationTask[] {
   return tasks.filter((task) => task.status === status);
+}
+
+export function selectActiveTasks(tasks: GenerationTask[], limit = 3): GenerationTask[] {
+  return tasks
+    .filter((task) => task.status === "queued" || task.status === "running")
+    .sort((a, b) => {
+      if (a.status === "running" && b.status !== "running") return -1;
+      if (b.status === "running" && a.status !== "running") return 1;
+      return b.createdAt - a.createdAt;
+    })
+    .slice(0, limit);
 }
 
 export function selectFromState(state: QueueState) {

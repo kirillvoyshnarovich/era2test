@@ -17,7 +17,7 @@ export default function App() {
       </Layout>
       <OnboardingTour />
       <CopyToastProvider />
-      <DailyCheckIn />
+      {/* <DailyCheckIn /> */}
       <CornerPromo />
     </AppProviders>
   );

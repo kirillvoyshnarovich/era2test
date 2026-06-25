@@ -21,6 +21,7 @@ import {
 import { selectFromState } from "./selectors";
 
 const QUEUE_STORAGE_KEY = "era2_generation_queue_v1";
+const SEARCH_DEBOUNCE_MS = 300;
 
 interface QueueActions {
   retryTask: (taskId: string) => void;
@@ -60,11 +61,18 @@ function canRetry(status: TaskStatus): boolean {
 export function QueueProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(queueReducer, initialQueueState);
   const stateRef = useRef(state);
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
+
+  useEffect(() => {
+    return () => {
+      if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     dispatch({ type: "INIT_START" });
@@ -133,7 +141,10 @@ export function QueueProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setSearch = useCallback((search: string) => {
-    dispatch({ type: "SET_SEARCH", payload: search });
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => {
+      dispatch({ type: "SET_SEARCH", payload: search });
+    }, SEARCH_DEBOUNCE_MS);
   }, []);
 
   const reload = useCallback(() => {

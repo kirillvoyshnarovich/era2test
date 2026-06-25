@@ -25,7 +25,7 @@ export const QUEUE_SEED: GenerationTask[] = [
     status: "running",
     progress: 27,
     credits: 65,
-    etaSeconds: 168,
+    etaSeconds: 1680,
   },
   {
     id: "task-003",

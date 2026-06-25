@@ -1,6 +1,6 @@
 import type { GenerationTask, GenType, TaskStatus } from "@/entities/generation-task";
 
-export type QueueSort = "newest" | "oldest";
+export type QueueSort = "newest" | "oldest" | "status" | "progress-desc" | "progress-asc";
 export type QueueFilterStatus = "all" | TaskStatus;
 export type QueueFilterType = "all" | GenType;
 export type QueueLoadState = "idle" | "loading" | "ready" | "error";

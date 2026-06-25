@@ -140,6 +140,8 @@
   --c-accent-soft: #fde3d3;
   --c-accent-glow: rgba(232,84,32,0.25);
   --c-accent-hi: #ffb27a;
+  --c-accent-done: #34d399;
+  --c-accent-failed: #FF6B6B;
 
   /* Light shadows */
   --shadow-1: 0 1px 2px rgba(20, 11, 5, 0.06), 0 0 0 1px var(--c-line);

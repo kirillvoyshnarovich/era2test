@@ -2,7 +2,7 @@ export { Eyebrow } from "./Eyebrow"
 export type { EyebrowProps } from "./Eyebrow"
 
 export { Chip } from "./Chip"
-export type { ChipProps } from "./Chip"
+export type { ChipProps, ChipVariant } from "./Chip"
 
 export { Placeholder } from "./Placeholder"
 export type { PlaceholderProps } from "./Placeholder"

@@ -30,11 +30,11 @@ export function TaskActions({
 }: TaskActionsProps) {
   const primary =
     status === "queued" || status === "running"
-      ? { label: "Отмена", icon: X, onClick: onCancel }
+      ? { label: "Отмена", icon: X, onClick: onCancel, iconColor: "var(--text-secondary)" }
       : status === "failed" || status === "canceled"
-        ? { label: "Повторить", icon: RotateCcw, onClick: onRetry }
+        ? { label: "Повторить", icon: RotateCcw, onClick: onRetry, iconColor: "var(--c-accent)" }
         : status === "done"
-          ? { label: "Скачать", icon: Download, onClick: onDownload }
+          ? { label: "Скачать", icon: Download, onClick: onDownload, iconColor: "var(--c-accent)" }
           : null;
 
   return (
@@ -45,10 +45,10 @@ export function TaskActions({
           variant={compact ? "ghost" : "outline"}
           size="sm"
           onClick={primary.onClick}
-          className={cn("h-8 rounded-full text-[13px]", compact && "px-2.5")}
+          className={cn("h-8 w-8 rounded-sm text-[13px]", compact && "px-2.5")}
+          aria-label={primary.label}
         >
-          <primary.icon className="h-3.5 w-3.5" />
-          {!compact && primary.label}
+          <primary.icon className="h-4 w-4" color={primary.iconColor} />
         </Button>
       )}
 
@@ -58,7 +58,7 @@ export function TaskActions({
             type="button"
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground"
+            className="h-8 w-8 rounded-sm text-muted-foreground hover:text-foreground"
             aria-label="Дополнительные действия"
           >
             <MoreHorizontal className="h-4 w-4" />
